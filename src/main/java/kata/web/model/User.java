@@ -13,18 +13,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+
+    @Column(name="name")
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
     private String name;
 
-    @Column
+    @Column(name="last_name")
     @NotEmpty(message = "Last name should not be empty")
     @Size(min = 2, max = 50, message = "Last name should be between 2 and 100 characters")
     private String lastName;
 
 
-    @Column
+    @Column(name="age")
     @Min(value = 1, message = "Age should be greater than 0")
     private byte age;
 
@@ -36,18 +37,18 @@ public class User {
         this.lastName = lastName;
         this.age = age;
     }
-    public User(long id, String name, String lastName, byte age) {
+    public User(String name, String lastName, byte age, long id) {
         this(name, lastName, age);
         this.id = id;
     }
 
     @Override
     public String toString() {
-        return "User" + " " + '{' +
-                "ID" + " = " + id + "; " +
-                "Name" + " = " + '\'' + name + '\'' + "; " +
-                "Last Name" + " = " + '\'' + lastName + '\'' + "; " +
-                "Age" + " = " + age + '}';
+        return "[ " +
+                "ID = " + id + " | " +
+                "Name = '" + name + '\'' + " | " +
+                "Last Name = '" + lastName + '\'' + " | " +
+                "Age = '" + age + '\''  + " ]";
     }
 
     public long getId() {

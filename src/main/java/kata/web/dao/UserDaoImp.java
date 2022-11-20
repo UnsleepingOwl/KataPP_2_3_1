@@ -1,56 +1,120 @@
 package kata.web.dao;
 
 import kata.web.model.User;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.TypedQuery;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @Component
 public class UserDaoImp implements UserDao {
 
-    ////
-    private static long ID = 1;
-    private List<User> debugUserList = new ArrayList<>();
-    {
-        debugUserList.add(new User(++ID, "name"+ID, "lastName"+ID,(byte) ID));
-        debugUserList.add(new User(++ID, "name"+ID, "lastName"+ID,(byte) ID));
-        debugUserList.add(new User(++ID, "name"+ID, "lastName"+ID,(byte) ID));
-        debugUserList.add(new User(++ID, "name"+ID, "lastName"+ID,(byte) ID));
-        debugUserList.add(new User(++ID, "name"+ID, "lastName"+ID,(byte) ID));
-    }
+    @Autowired
+    private SessionFactory sessionFactory;
+    private Session session;
+    private Transaction transaction;
 
     @Override
+    @Transactional
     public void add(User user) {
-        debugUserList.add(user);
+        try{
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            session.save(user);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
+    @Transactional
     public void delete(long id) {
-        User deletedUser = getUserById(id);
-        debugUserList.removeIf(user -> user.getId() == id);
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            User user = session.get(User.class, id);
+            session.delete(user);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
+    @Transactional
     public void update(User user, long id) {
-        User updatedUser = getUserById(id);
-        updatedUser.setName(user.getName());
-        updatedUser.setLastName(user.getLastName());
-        updatedUser.setAge(user.getAge());
+        try{
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            User oldUser = session.get(User.class, id);
+            oldUser.setName(user.getName());
+            oldUser.setLastName(user.getLastName());
+            oldUser.setAge(user.getAge());
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     public List<User> listUsers() {
-        return debugUserList;
+        List listUsers = null;
+        try {
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            listUsers = session.createQuery("FROM User").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return (List<User>) listUsers;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUserById(long id) {
-        return debugUserList.stream().filter(user -> user.getId() == id).findAny().orElse(null);
+        User user = new User();
+        try{
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+            user  = session.get(User.class, id);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            transaction.rollback();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return user;
     }
 }
