@@ -11,7 +11,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
 
     @Column(name="name")
@@ -27,17 +27,17 @@ public class User {
 
     @Column(name="age")
     @Min(value = 1, message = "Age should be greater than 0")
-    private byte age;
+    private Byte age;
 
     public User() {
     }
 
-    public User(String name, String lastName, byte age) {
+    public User(String name, String lastName, Byte age) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
     }
-    public User(String name, String lastName, byte age, long id) {
+    public User(String name, String lastName, Byte age, Long id) {
         this(name, lastName, age);
         this.id = id;
     }
@@ -51,11 +51,11 @@ public class User {
                 "Age = '" + age + '\''  + " ]";
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -75,11 +75,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public byte getAge() {
+    public Byte getAge() {
         return age;
     }
 
-    public void setAge(byte age) {
+    public void setAge(Byte age) {
         this.age = age;
     }
 }
