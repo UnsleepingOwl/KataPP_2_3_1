@@ -16,75 +16,31 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public void add(User user) {
-        try {
-            entityManager.persist(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
+        entityManager.persist(user);
     }
 
     @Override
     public void delete(Long id) {
-        try {
-            entityManager.remove(getUserById(id));
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
+        entityManager.remove(getUserById(id));
     }
 
     @Override
     public void update(User user, Long id) {
-        try {
-            User oldUser = getUserById(id);
-            oldUser.setName(user.getName());
-            oldUser.setLastName(user.getLastName());
-            oldUser.setAge(user.getAge());
-            entityManager.merge(oldUser);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
+        User oldUser = getUserById(id);
+        oldUser.setName(user.getName());
+        oldUser.setLastName(user.getLastName());
+        oldUser.setAge(user.getAge());
+        entityManager.merge(oldUser);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<User> listUsers() {
-        List<User> listUsers = null;
-        try {
-            listUsers = entityManager.createQuery("FROM User").getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-        return listUsers;
+        return (List<User>) entityManager.createQuery("FROM User").getResultList();
     }
 
     @Override
     public User getUserById(Long id) {
-        User user = null;
-        try {
-            user = entityManager.find(User.class, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-        return user;
+        return entityManager.find(User.class, id);
     }
 }
