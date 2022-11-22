@@ -15,17 +15,17 @@ public class UserDaoImp implements UserDao {
     private EntityManager entityManager;
 
     @Override
-    public void add(User user) {
+    public void addUser(User user) {
         entityManager.persist(user);
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteUser(Long id) {
         entityManager.remove(getUserById(id));
     }
 
     @Override
-    public void update(User user, Long id) {
+    public void updateUser(User user, Long id) {
         User oldUser = getUserById(id);
         oldUser.setName(user.getName());
         oldUser.setLastName(user.getLastName());
@@ -35,7 +35,7 @@ public class UserDaoImp implements UserDao {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<User> listUsers() {
+    public List<User> getUsersList() {
         return (List<User>) entityManager.createQuery("FROM User").getResultList();
     }
 

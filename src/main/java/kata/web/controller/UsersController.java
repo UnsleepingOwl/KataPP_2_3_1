@@ -22,7 +22,7 @@ public class UsersController {
 
     @GetMapping()
     public String getUsersList(Model model) {
-        model.addAttribute("users_list", userService.listUsers());
+        model.addAttribute("users_list", userService.getUsersList());
         return "/users/all";
     }
 
@@ -42,7 +42,7 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             return "users/new";
         }
-        userService.add(user);
+        userService.addUser(user);
         return "redirect:/users";
     }
 
@@ -57,13 +57,13 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             return "users/edit";
         }
-        userService.update(user, id);
+        userService.updateUser(user, id);
         return "redirect:/users";
     }
 
     @DeleteMapping("/id={id}")
     public String deleteUser(@PathVariable("id") Long id) {
-        userService.delete(id);
+        userService.deleteUser(id);
         return "redirect:/users";
     }
 }
